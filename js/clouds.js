@@ -1,104 +1,80 @@
-function Clouds(game) {
+function Clouds(game, x, y, dy, src) {
 
   this.game = game;
 
-  this.x = this.game.canvas.width * 0.2
-  this.y = this.game.canvas.width * 0.4
+  this.x = x
+  this.y = y
 
   this.x0 = this.x
   this.y0 = this.y
 
   this.img = new Image()
-  this.img.src = "img/cloud-01.png"
+  this.img.src = src
 
   this.w = 260
   this.h = this.w
 
-  this.dy = 1.5
-  this.dx = 4
+  this.dy = dy
+  this.dx = 2
 
   this.vx = 1
   this.vy = 1
 
   this.gravity = 0.2
 
+  this.direction = 1
+  this.totalDistance = 0
+
+  // this.points = []
 }
 
 Clouds.prototype.draw = function() {
 
   this.game.ctx.drawImage(this.img, this.x, this.y, this.w, this.h)
 
+  // this.points.forEach(function(point) {
+  //   point.draw()
+  // })
+
 }
 
 Clouds.prototype.move = function() {
 
   this.y += this.dy
+  this.vy -= 1
 
-}
+  if(this.y <= this.y0){  
+  this.vy = 1
+  this.y = this.y0;
 
-Clouds.prototype.float = function() {
+  } else {  
+    this.vy += this.gravity
+  }
 
-  this.y -= this.dy
-  this.vy += 0.01
-
- 
-    if(this.y > this.y0) {
-      this.vy = 1
-      this.y= this.y0
-
-    } else {
-      this.cloudVy += this.gravity
-      this.y += this.vy
-
-    }
+  this.floatAll()
 
 }
 
 
-// Clouds.prototype.float = function() {
+Clouds.prototype.floatAll = function() {
 
-//   this.x -= this.dx
-//   this.vx += 0.001
+  this.x += this.dx * this.direction
+  this.totalDistance += this.dx
 
- 
 
-//     if(this.x > this.x0) {
-//       this.vx = 1
-//       this.x= this.x0
+  if(this.totalDistance === 250 || this.x + this.w > this.game.canvas.width || this.x < 0) {
+    this.totalDistance = 0
+    this.direction *= -1
+  }
 
-//     } else {
-//       this.vx += this.gravity
-//       this.x += this.vx
+}
 
-//     }
-  
+// Clouds.prototype.generatePoint = function () {
+
+//   this.points.push(new Points(this.game, this.x + 100, this.y - 100))
+
 // }
 
 
 
 
-
-
-
-
-
- // if(this.cloudX < this.cloudW * 1.2) {
-
-    // this.cloudX += this.cloudDx
-    // this.cloudVx += 0.1 
-
-
-
-  // } else if(this.cloudX > this.cloudW * 1.2) {
-
-  //   this.cloudX -= this.cloudDx
-  //   this.cloudVx -= 0.1  
-    
-
-  //   if(this.cloudY  > this.cloudY0) {
-  //     this.cloudVy = 1
-  //     this.cloudY = this.cloudY0
-  //   } else {
-  //     // this.cloudVy += this.gravity
-  //     this.cloudY += this.cloudVy
-  //   }

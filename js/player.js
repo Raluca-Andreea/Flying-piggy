@@ -8,7 +8,7 @@ function Player(game) {
   this.x = this.x0
   this.y = this.y0
 
-  this.vy = 3
+  this.vy = 10
   this.vx = 1
 
   this.w = 150
@@ -23,17 +23,19 @@ function Player(game) {
   this.gravity = 0.3
 
   this.direction =
-  {
-    top : false,
-    left : false,
-    right : false
-  }
+    {
+      top: false,
+      left: false,
+      right: false
+    }
 
   this._setPlayerHandlers()
 
+  this.cloudsColision = this.game.clouds[0]
+  this.canTop = true;
 }
 
-Player.prototype.draw = function() {
+Player.prototype.draw = function () {
 
   this.game.ctx.drawImage(
     this.img,
@@ -44,55 +46,53 @@ Player.prototype.draw = function() {
     this.x,
     this.y,
     this.w,
-    this.h 
+    this.h
   )
 
 }
 
 
-Player.prototype._setPlayerHandlers = function() {
+Player.prototype._setPlayerHandlers = function () {
 
-  document.onkeydown = function(e) {
+  document.onkeydown = function (e) {
 
-    switch(e.keyCode) {
+    switch (e.keyCode) {
 
       case this.game.keys.RIGHT_ARROW:
-          this.direction.right = true
-          this.flipImage()
-          
-          if(this.x + this.w <= this.game.canvas.width)
-          this.move();
-          
-          this.animateImg();
-          break;
+        this.direction.right = true
+        this.flipImage()
+
+        this.move();
+
+        this.animateImg();
+        break;
 
       case this.game.keys.LEFT_ARROW:
-          this.direction.left = true
-          this.flipImageReverse()
+        this.direction.left = true
+        this.flipImageReverse()
 
-          if(this.x > 0)
-          this.move();
-        
-          this.animateImg();
-          break;
+        this.move();
+
+        this.animateImg();
+        break;
 
       case this.game.keys.TOP_KEY:
-          this.direction.top = true
+        this.direction.top = true
+        this.move()
 
-          this.move();
-          break;
+        break;
 
     }
 
   }.bind(this)
 
-  document.onkeyup = function(e) {
+  document.onkeyup = function (e) {
 
-    switch(e.keyCode) {
+    switch (e.keyCode) {
 
       case this.game.keys.RIGHT_ARROW:
         this.direction.right = false
-        this.img.frameIndex = 0   
+        this.img.frameIndex = 0
         break;
 
       case this.game.keys.LEFT_ARROW:
@@ -102,7 +102,7 @@ Player.prototype._setPlayerHandlers = function() {
 
       case this.game.keys.TOP_KEY:
         this.direction.top = false
-        this.img.frameIndex = 0   
+        this.img.frameIndex = 0
 
         break;
 
@@ -110,87 +110,75 @@ Player.prototype._setPlayerHandlers = function() {
 
   }.bind(this)
 
- }
+}
 
 
 
-Player.prototype.flipImage = function() {
+Player.prototype.flipImage = function () {
 
   this.img.src = "img/Flying-pig.png"
 
 }
 
 
-Player.prototype.flipImageReverse = function() {
+Player.prototype.flipImageReverse = function () {
 
   this.img.src = "img/Flying-pig-reverse.png"
 
 }
 
 
-Player.prototype.animateImg = function() {
+Player.prototype.animateImg = function () {
 
-  if(this._setPlayerHandlers) {
+  if (this._setPlayerHandlers) {
 
     this.img.frameIndex += 1;
 
-    if(this.img.frameIndex > 3) this.img.frameIndex = 0;
+    if (this.img.frameIndex > 3) this.img.frameIndex = 0;
 
-  } 
+  }
 
 }
 
-Player.prototype.move = function() {
+Player.prototype.move = function () {
 
-  if(this.direction.right) {
+  if (this.direction.right && this.x + this.w <= this.game.canvas.width) {
     this.x += 10
     this.vx += 5
-    
+
   }
 
-  if(this.direction.left) {
+  if (this.direction.left && this.x > 0) {
     this.x -= 10
     this.vx -= 5
   }
 
-  if(this.direction.top) {
-    this.y -= 1
-    this.vy -= 1.5
+  // console.log(this.y, this.y0)
+  if (this.direction.top  && this.canTop) {
+    this.canTop = false;
+    this.y -= 10
+    this.vy -= 15.5
 
   }
 
-  if(this.y >= this.y0 && (this.game.clouds[0].x < this.x + this.w / 2) && (this.x + this.w / 2 < (this.game.clouds[0].x + this.game.clouds[0].w)) ){  
-  this.vy = 1
-  this.y = this.y0;
+  if (this.y <= 0) {
+    this.y = 0;
+    this.vy = 0;
+  }
 
-} else {  
-  this.vy += this.gravity
-  this.y += this.vy
+  // console.log(this.cloudsColision)
+  if (this.y >= this.y0 && (this.cloudsColision.x < this.x + this.w / 2) && (this.x + this.w / 2 < (this.cloudsColision.x + this.cloudsColision.w))) {
+
+    this.vy = 1
+    this.y = this.y0;
+    this.canTop = true;
+
+  } else {
+    this.vy += this.gravity
+    this.y += this.vy
+  }
+
 }
 
-}
 
 
-
-
-
-
-
-
-// if(this.y >= this.y0){  
-//   this.vy = 1
-//   this.y = this.y0;
-
-// } else {  
-//   this.vy += this.gravity
-//   this.y += this.vy
-// } 
-
-// if(this.y >= this.y0 && (this.x + this.w > this.game.clouds[0].cloudX) && (this.x < (this.game.clouds[0].cloudX + this.game.clouds[0].cloudW))){  
-//   this.vy = 1
-//   this.y = this.y0;
-
-// } else {  
-//   this.vy += this.gravity
-//   this.y += this.vy
-// }
