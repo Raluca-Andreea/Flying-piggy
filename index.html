@@ -1,30 +1,47 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Flying Pig</title>
+  <title>Flying Piggy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+
+ 
+  <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Cormorant" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
+
 
   <script src="js/background.js"></script>
-  <script src="js/backgroundStates.js"></script>
-
-  <!-- <script src="js/points.js"></script> -->
   <script src="js/clouds.js"></script>
   <script src="js/player.js"></script>
+  <script src="js/scoreBoard.js"></script>
   <script src="js/game.js"></script>
   <script src="js/script.js"></script>
 
 </head>
+
 <body>
 
-  <div class="portada-principal">
-    <h1>I'm flying high<br>High off the ground</h1>
+  <div id="wrapper" class="active">
+
+    <header id="cover" class="active">
+
+      <h1>I belive I can fly</h1>
+      <aside>do you?</aside>
+
+    </header>
+
+    <div id="intro" class="active">
+      <p>If yes, press<strong> enter </strong>to continue</p>
+    </div>
+
   </div>
 
   <canvas id="cerdito"></canvas>
 
-  
+
 </body>
+
 </html>

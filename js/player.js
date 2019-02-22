@@ -157,7 +157,7 @@ Player.prototype.move = function () {
   if (this.direction.top  && this.canTop) {
     this.canTop = false;
     this.y -= 10
-    this.vy -= 15.5
+    this.vy -= 12.5
 
   }
 

@@ -8,7 +8,6 @@ function Background(game, src) {
   this.img = new Image()
   this.img.src = src
 
- 
 }
 
 Background.prototype.draw = function() {

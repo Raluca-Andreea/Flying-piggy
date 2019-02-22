@@ -5,6 +5,7 @@ var Game = {
   w: undefined,
   h: undefined,
   fps: 60,
+  scoreBoard: undefined,
   keys: {
     TOP_KEY: 38,
     RIGHT_ARROW: 39,
@@ -29,19 +30,17 @@ var Game = {
     this.setHandlers()
     this.reset()
 
+    // this.moveFirstCloud()
 
     this.interval = setInterval(function () {
       // console.time()
       this.clear()
       this.frameCounter++
-      this.moveFirstCloud()
 
 
       if (this.frameCounter > 1000) {
         this.frameCounter = 0
       }
-
-
 
       if (this.frameCounter % 40 === 0) {
 
@@ -219,13 +218,15 @@ var Game = {
 
       // }
 
+      this.score += 0.01;
 
       this.drawAll()
       this.moveAll()
-
       this.clearClouds()
 
-      // if(this.player.y === this.canvas.height) this.gameOver()
+      this.audio.play()
+
+      if(this.player.y > this.canvas.height) this.gameOver()
       // console.timeEnd()
 
     }.bind(this), 1000 / this.fps)
@@ -241,15 +242,21 @@ var Game = {
 
   gameOver: function () {
 
+    this.audio.pause()
     this.stop();
+    this.ctx.font = "60px sans-serif";
+    this.ctx.fillStyle = "red";
+    this.ctx.textAlign = "center"
+    this.ctx.fillText('GAME OVER Pepe', this.canvas.width / 2, this.canvas.height / 2);
+  
+    document.onkeyup = function (e) {
 
-    if (confirm("Game Over. Wanna play again?")) {
-
-      this.reset()
-      this.start()
-
-    }
-
+      if(e.keyCode === 13) {
+        this.reset()
+        this.start()
+      }
+    }.bind(this)
+   
   },
 
 
@@ -325,9 +332,6 @@ var Game = {
     }
     this.keysBackgrounds = Object.keys(this.backgrounds).reverse();
 
-
-
-
     this.clouds = []
     this.dyCloud = 4;
     this.generateFirstCloud()
@@ -337,6 +341,13 @@ var Game = {
     this.frameCounter = 0
     this.colision = this.clouds[0]
     this.left = true
+
+    this.scoreBoard = ScoreBoard
+    this.score = 0
+    // this.moveFirst = false
+
+    this.audio = new Audio("audio/happy-upbeat-background-instrumental-for-videos-kids-no-copyright-royalty-free.mp3")
+
   },
 
 
@@ -367,20 +378,23 @@ var Game = {
 
   },
 
-
-
   drawAll: function () {
 
     this.player.draw()
     this.clouds.forEach(function (cloud) {
       cloud.draw()
     })
+    this.drawScore()
 
   },
 
-  moveAll: function () {
 
-    for (var i = 1; i < this.clouds.length; i++) {
+  moveAll: function () {
+    var i = 1
+    if(this.moveFirst){
+      i = 0
+    }
+    for (i; i < this.clouds.length; i++) {
       this.clouds[i].move()
     }
 
@@ -416,21 +430,23 @@ var Game = {
 
   },
 
-  moveFirstCloud: function () {
+  // moveFirstCloud: function () {
 
-    setTimeout(function () {
+  //   setTimeout(function () {
+  //     // this.clouds[0].move()
+  //     // this.moveFirst = true;
+  //   }.bind(this), 3000)
+
+  // },
 
 
-      this.clouds[0].move()
-
-    }.bind(this), 3000)
-
-  },
   drawBackgrounds: function (background, opacity) {
     this.ctx.globalAlpha = opacity;
     // console.log(background)
     background.draw()
   },
+
+
   condicinalOpacity: function(opBackground){
     if (opBackground !== 0) {
       
@@ -439,14 +455,18 @@ var Game = {
     }    
     // console.log(opBackground)
   },
+
+  
   resetBackgrounds: function(){
     // console.log('-----entra-----')
     for(key in this.backgrounds){
       this.backgrounds[key].opacity = 1;
     }
-  }
+  },
 
-
+  drawScore: function () {
+    this.scoreBoard.update(this.score, this.ctx)
+  },
 
 }
 

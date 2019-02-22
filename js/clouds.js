@@ -25,16 +25,11 @@ function Clouds(game, x, y, dy, src) {
   this.direction = 1
   this.totalDistance = 0
 
-  // this.points = []
 }
 
 Clouds.prototype.draw = function() {
 
   this.game.ctx.drawImage(this.img, this.x, this.y, this.w, this.h)
-
-  // this.points.forEach(function(point) {
-  //   point.draw()
-  // })
 
 }
 
@@ -68,13 +63,5 @@ Clouds.prototype.floatAll = function() {
   }
 
 }
-
-// Clouds.prototype.generatePoint = function () {
-
-//   this.points.push(new Points(this.game, this.x + 100, this.y - 100))
-
-// }
-
-
 
 
